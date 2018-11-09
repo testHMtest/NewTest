@@ -168,11 +168,7 @@ class App extends Component {
         this.state = {
             arhiv : [
             'Строка номер 1',
-            'Строка номер 2',
-            'Строка номер 3',
-            'Строка номер 4',
-            'Строка номер 5',
-            'Строка номер 6'
+            'Строка номер 2'
             ]
         };
         this.updateText = this.updateText.bind(this);
