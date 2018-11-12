@@ -23,6 +23,13 @@ class Blog extends React.Component{
     rm () {
         this.props.delt(this.props.index);
     }
+    timeAndDate () {
+    return(
+        <div>
+            {new Date().toLocaleDateString()}
+        </div>
+    )
+    }
 
 
 
@@ -39,6 +46,7 @@ class Blog extends React.Component{
             {this.props.children}
             <button onClick={this.edit.bind (this)}>Редактировать</button>
             <button onClick={this.rm.bind (this)}>Удалить</button>
+            {this.timeAndDate()}
             </div>
         )
 
@@ -138,6 +146,7 @@ class Blog extends React.Component{
 // }
 
 class Input extends React.Component{
+    
   render(){
       return(
           <div>
@@ -169,7 +178,7 @@ class App extends Component {
             arhiv : [
             'Строка номер 1',
             'Строка номер 2'
-            ]
+            ],
         };
         this.updateText = this.updateText.bind(this);
         this.deleteBlg = this.deleteBlg.bind(this)
@@ -200,14 +209,18 @@ class App extends Component {
         arr.push (text);
         this.setState ({arhiv: arr});
     }
+    inpChange = (e, inpNum) => {
+        this.setState ({inpNum : e.target.value})
+    }
 
 
   render() {
 
     
     return <div>
-            <Input></Input>
-            <button onClick={this.addBlog.bind(this, 'New')}>add</button>
+            {/* <Input></Input> */}
+            <input ref="newText" onChange={(e) => this.inpChange(e)} type="text"/>
+            <button onClick={this.addBlog.bind(this, this.state.valueCh)}>add</button>
             {/* <Button>add</Button> */}
             {/* <Blog>Text1</Blog>
             <Blog>Txt1</Blog>
