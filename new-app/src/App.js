@@ -179,9 +179,11 @@ class App extends Component {
             'Строка номер 1',
             'Строка номер 2'
             ],
+        valueCh : '',
         };
         this.updateText = this.updateText.bind(this);
         this.deleteBlg = this.deleteBlg.bind(this)
+        
     }
   
   
@@ -209,8 +211,8 @@ class App extends Component {
         arr.push (text);
         this.setState ({arhiv: arr});
     }
-    inpChange = (e, inpNum) => {
-        this.setState ({inpNum : e.target.value})
+    inpChange = (e) => {
+        this.setState ({valueCh: e.target.value})
     }
 
 
