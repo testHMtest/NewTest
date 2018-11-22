@@ -38,7 +38,8 @@ class Blog extends React.Component{
             width : 200,
             height : 100,
             margin :10,
-            background : 'blue'
+            background : 'blue',
+            
   
         }
         return(
@@ -57,7 +58,8 @@ class Blog extends React.Component{
             width : 200,
             height : 100,
             margin :10,
-            background : 'blue'
+            background : 'blue',
+           
   
         }
         return(
@@ -145,6 +147,98 @@ class Blog extends React.Component{
 //   }
 // }
 
+class NewBlog extends React.Component{
+    constructor() {
+        super();
+        this.state = {edit: false};
+    }
+
+    edit () {
+        this.setState({edit: true});
+    }
+
+    // save () {
+    //     this.props.updt(this.refs.etoTxt.value, this.props.index);
+    //     this.setState ({edit: false});
+    // }
+
+    // rm () {
+    //     this.props.delt(this.props.index);
+    // }
+    // timeAndDate () {
+    // return(
+    //     <div>
+    //         {new Date().toLocaleDateString()}
+    //     </div>
+    // )
+    // }
+
+
+
+    rendNorm () {
+        var styleBlog = {
+            width : 200,
+            height : 100,
+            margin :10,
+            background : 'blue',
+            // marginLeft : 500
+  
+        }
+        return(
+            <div style = {styleBlog}>
+            
+            <button >Редактировать</button>
+            <button >Удалить</button>
+            </div>
+        )
+
+    }
+
+    rendEdit () {
+        var styleBlog = {
+            width : 200,
+            height : 100,
+            margin :10,
+            background : 'blue',
+            // marginLeft : 500
+  
+        }
+        return(
+            <div style = {styleBlog}>
+            
+            <textarea ref="etoTxt" ></textarea>
+            <button >Сохранить</button>
+            </div>
+        )
+
+    }
+
+  rendBlog () {
+    return (
+      <div>
+
+      </div>
+    )
+  }
+
+  render(){
+
+      if (this.state.edit) {
+        return this.rendEdit ();
+      } else {
+        return this.rendNorm ();
+      }
+      
+          
+        //   <div style = {styleBlog}>
+        //   {this.props.children}
+        //   <button>Редактировать</button>
+        //   <button>Удалить</button>
+        //   </div>
+      
+  }
+}
+
 class Input extends React.Component{
     
   render(){
@@ -180,6 +274,9 @@ class App extends Component {
             'Строка номер 2'
             ],
         valueCh : '',
+        newValueCh : '',
+        zagl : '',
+        arrObj : [],
         };
         this.updateText = this.updateText.bind(this);
         this.deleteBlg = this.deleteBlg.bind(this)
@@ -215,20 +312,96 @@ class App extends Component {
         this.setState ({valueCh: e.target.value})
     }
 
+    newZagl = (e) => {
+        this.setState ({zagl: e.target.value})
+    }
+
+    newInpChg = (e) => {
+        this.setState ({newValueCh: e.target.value})
+    }
+
+    newAddBlog =(zag, text) => {
+        var newId = Math.floor(Math.random()*(100000000-1))+1;
+        var obj = {
+            id : newId,
+            zagalovok : zag,
+            sodrezh : text,
+            addData : new Date().toLocaleDateString(),
+            addTime : new Date().toLocaleTimeString(),
+        }
+        var seriaObj= JSON.stringify(obj);
+        localStorage.setItem(newId, seriaObj);
+        return(console.log(obj))
+    }
+
+    parsJson = () => {
+        
+        var arr = this.state.arrObj;
+        for(var id in localStorage) {
+            if (id.length == 8) {
+                // console.log(JSON.parse(localStorage.getItem(id)))
+                
+                 arr.push (JSON.parse(localStorage.getItem(id)))
+            }
+        };
+        this.setState ({arrObj : arr});
+        console.log(this.state.arrObj)
+        
+         
+    }
+
+    NewEachArh (item,i){
+        return (<NewBlog key = {i} index={i} updt={this.updateText} delt={this.deleteBlg}>
+            {item}
+            </NewBlog>
+            );
+      }
+
+    // rendNewBlog = () => {
+    //     for (var id in this.state.arrObj) {
+    //         console.log(this.state.arrObj)
+    //         return ( <div>
+    //             <h3>{id.zagalovok}</h3>
+                
+    //         </div>             
+               
+
+    //         )
+    //     }
+    // }
+    componentDidMount() {
+        this.parsJson()
+    }
+
 
   render() {
+    var otstup = {
+        marginLeft : 500
+
+
+    }
 
     
     return <div>
-            {/* <Input></Input> */}
-            <input ref="newText" onChange={(e) => this.inpChange(e)} type="text"/>
-            <button onClick={this.addBlog.bind(this, this.state.valueCh)}>add</button>
-            {/* <Button>add</Button> */}
-            {/* <Blog>Text1</Blog>
-            <Blog>Txt1</Blog>
-            <Blog>Tet1</Blog> */}
-            {this.state.arhiv.map(this.eachArh.bind(this))}
-          
+                {/* <Input></Input> */}
+                <div style={otstup}>
+                    <input onChange={(e) => this.newZagl(e)} type="text"/>
+                    <input onChange={(e) => this.newInpChg(e)} type="text"/> 
+                    <button onClick={this.newAddBlog.bind(this, this.state.zagl, this.state.newValueCh)}>addick</button>
+                    {this.state.arrObj.map(this.NewEachArh.bind(this))}
+                    {/* {this.newAddBlog('Test', 'Burger')} */}
+                    
+                    {/* {this.rendNewBlog()} */}
+                </div>
+                <div style= { {position:'absolute', fontFamaly:'green'}}>
+                    <input ref="newText" onChange={(e) => this.inpChange(e)} type="text"/>
+                    <button onClick={this.addBlog.bind(this, this.state.valueCh)}>add</button>
+                    {/* <Button>add</Button> */}
+                    {/* <Blog>Text1</Blog>
+                    <Blog>Txt1</Blog>
+                    <Blog>Tet1</Blog> */}
+                    {this.state.arhiv.map(this.eachArh.bind(this))}
+                </div>
           </div>
   };
 }
