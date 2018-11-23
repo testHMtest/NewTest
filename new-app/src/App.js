@@ -162,9 +162,9 @@ class NewBlog extends React.Component{
     //     this.setState ({edit: false});
     // }
 
-    // rm () {
-    //     this.props.delt(this.props.index);
-    // }
+    rm () {
+        this.props.delt(this.props.index, this.props.id);
+    }
     // timeAndDate () {
     // return(
     //     <div>
@@ -177,8 +177,8 @@ class NewBlog extends React.Component{
 
     rendNorm () {
         var styleBlog = {
-            width : 200,
-            height : 100,
+            width : 220,
+            height : 150,
             margin :10,
             background : 'blue',
             // marginLeft : 500
@@ -186,9 +186,13 @@ class NewBlog extends React.Component{
         }
         return(
             <div style = {styleBlog}>
-            
+            {/* {this.props.item.id}<br/> */}
+            <b>{this.props.item.zagalovok}</b><br/>
+            {this.props.item.sodrezh}<br/>
+            {this.props.item.addData}<br/>
+            {this.props.item.addTime}<br/>
             <button >Редактировать</button>
-            <button >Удалить</button>
+            <button onClick={this.rm.bind (this)}>Удалить</button>
             </div>
         )
 
@@ -322,6 +326,7 @@ class App extends Component {
 
     newAddBlog =(zag, text) => {
         var newId = Math.floor(Math.random()*(100000000-1))+1;
+        var arr = this.state.arrObj;
         var obj = {
             id : newId,
             zagalovok : zag,
@@ -329,8 +334,11 @@ class App extends Component {
             addData : new Date().toLocaleDateString(),
             addTime : new Date().toLocaleTimeString(),
         }
+        arr.push(obj);
+        this.setState ({arrObj : arr});
         var seriaObj= JSON.stringify(obj);
         localStorage.setItem(newId, seriaObj);
+        console.log(this.state.arrObj)
         return(console.log(obj))
     }
 
@@ -351,11 +359,18 @@ class App extends Component {
     }
 
     NewEachArh (item,i){
-        return (<NewBlog key = {i} index={i} updt={this.updateText} delt={this.deleteBlg}>
+        return (<NewBlog key = {i} index={i} id={item.id} item={item} delt={this.newDelBlg}>
             {item}
             </NewBlog>
             );
-      }
+    }
+
+    newDelBlg (i, id) {
+        // var arrr = this.state.arrObj;
+        // arr.splice(i, 1);
+        // this.setState ({arhiv: arr})
+        localStorage.removeItem(id)
+        }
 
     // rendNewBlog = () => {
     //     for (var id in this.state.arrObj) {
@@ -372,6 +387,8 @@ class App extends Component {
     componentDidMount() {
         this.parsJson()
     }
+
+ 
 
 
   render() {
@@ -393,7 +410,7 @@ class App extends Component {
                     
                     {/* {this.rendNewBlog()} */}
                 </div>
-                <div style= { {position:'absolute', fontFamaly:'green'}}>
+                <div>
                     <input ref="newText" onChange={(e) => this.inpChange(e)} type="text"/>
                     <button onClick={this.addBlog.bind(this, this.state.valueCh)}>add</button>
                     {/* <Button>add</Button> */}
